@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app='module'>
+    <head>
+        <title>Angular Scope Inheritance</title>
+    </head>
+    <body>
+        <h3>This example show what problems child scope can create.</h3>
+        <h3>If you use next directives in parent scope, angular will always</h3>
+        <h3>craete a child scope for them. This can causes unexpected problems</h3>
+        <h3>to those who doesn't know how it works.</h3>
+        <h3>Here you can find good article about topic:</h3><a href='https://github.com/angular/angular.js/wiki/Understanding-Scopes'>Angular Scopes</a>
+        <ul>
+            <li>ng-include</li>
+            <li>ng-if</li>
+            <li>ng-switch</li>
+            <li>ng-repeat</li>
+            <li>ng-view</li>
+            <li>ng-controller</li>
+            <li>directives</li>
+        </ul>
+        <h3>Eaxmple follows:Consider next code</h3>
+        <script src="https://gist.github.com/maukka76/dda2f96cb672ec86de5e.js"></script>
+        <h3>And next html snippet:</h3>
+        <script src="https://gist.github.com/maukka76/ef3016c5c59dbfd3640c.js"></script>
+        <h3>If you now try to change the input text Cruel world you can see that span element containing the {{message}} is not updating </span></h3>
+        <script src="https://gist.github.com/maukka76/ce8e31d3a93b3639f1fa.js"></script>
+        <div ng-controller='exampleController'>
+            <p>{{message}}</p>
+            <div ng-if='isAdmin'>
+                <p>Edit the cruel world message</p>
+                <input ng-model='message'>
+            </div>
+        </div>
+        <div>
+            <h4>
+                Before we modify the input, no message property exists on the child scope, so the<br/> prototype chain is consulted, and the parent's message is used. However, when we update<br/> the input, ng-model sets the message property on the child. The end result is two<br/> separate message properties on the parent and child scope, not what we intended!</h4>
+            
+            <h3>Solution:</h3>
+            <h4>Change controller code as below:</h4>
+            <script src="https://gist.github.com/maukka76/81d13c6f1bf66e97bb72.js"></script>
+            <h4>And html as shown here</h4>
+            <script src="https://gist.github.com/maukka76/1fc00430b998adbe8dc8.js"></script>
+            
+            <h3>Test it!</h3>
+              <div ng-controller='exampleController2'>
+                    <p>{{data.message}}</p>
+                    <div ng-if='data.isAdmin'>
+                        <p>Edit the cruel world message</p>
+                        <input ng-model='data.message'>
+                    </div>
+            </div>
+            <h3>Explanation</h3>
+            <h4>
+                This example works because AngularJS now looks for message, then content. Since<br/> message refers to an object on the parent, content is never set on the child scope.<br/> It's a best practice to never bind directly to primitives to avoid this problem. 
+            </h4>
+        </div>
+        <script src="lib/jquery-2.1.4.min.js"></script>
+        <script src="lib/angular.min.js"></script>
+        <script src="scripts.js"></script>
+        <script src="solution.js"></script>
+    </body>
+</html>
